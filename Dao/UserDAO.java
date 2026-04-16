@@ -90,21 +90,46 @@ public class UserDAO {
 
   // busqueda de usuarios por id
   public User searchById(int id) {
-        String sql = "SELECT id, username, password, email, is_active FROM users WHERE id = ?";
+    String sql = "SELECT id, username, password, email, is_active FROM users WHERE id = ?";
+    try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
+      preparedStatement.setInt(1, id);
+      ResultSet rs = preparedStatement.executeQuery();
+      if (rs.next()) {
+        return new User(
+            rs.getInt("id"),
+            rs.getString("username"),
+            rs.getString("password"),
+            rs.getString("email"),
+            rs.getBoolean("is_active"));
+      }
+    } catch (SQLException e) {
+      System.err.println("Error buscar por id: " + e.getMessage());
+    }
+    return null;
+  }
+
+  // actualizacion del campo username indicado por id
+  public boolean updateUsername(int id, String nuevoUsername) {
+    String sql = "UPDATE users SET username = ? WHERE id = ?";
+    try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
+      preparedStatement.setString(1, nuevoUsername);
+      preparedStatement.setInt(2, id);
+      return preparedStatement.executeUpdate() > 0;
+    } catch (SQLException e) {
+      System.err.println("Error actualizar username: " + e.getMessage());
+      return false;
+    }
+  }
+
+  // actualizacion del campo password (hash SHA-256) indicado por id
+  public boolean updatePassword(int id, String nuevaPasswordHash) {
+        String sql = "UPDATE users SET password = ? WHERE id = ?";
         try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
-            preparedStatement.setInt(1, id);
-            ResultSet rs = preparedStatement.executeQuery();
-            if (rs.next()) {
-                return new User(
-                    rs.getInt("id"),
-                    rs.getString("username"),
-                    rs.getString("password"),
-                    rs.getString("email"),
-                    rs.getBoolean("is_active")
-                );
-            }
+            preparedStatement.setString(1, nuevaPasswordHash);
+            preparedStatement.setInt(2, id);
+            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("Error buscar por id: " + e.getMessage());
+            System.err.println("Error actualizar password: " + e.getMessage());
+            return false;
         }
-        return null;
     }
