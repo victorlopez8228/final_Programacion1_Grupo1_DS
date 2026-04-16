@@ -3,6 +3,9 @@ package Dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import db.ConnectionDB;
 import model.User;
@@ -28,40 +31,80 @@ public class UserDAO {
 }
 
   // verifica si ya existe un usuario con ese username en la BD.
-public boolean existUsername(String username) {
-        String sql = "SELECT COUNT(*) FROM users WHERE username = ?";
-        try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
-            preparedStatement.setString(1, username);
-            ResultSet rs = preparedStatement.executeQuery();
-            if (rs.next()) {
-                int count = rs.getInt(1);
-                return count > 0;
-            }
-        
-            return false;
-        } catch (SQLException e) {
-            System.err.println("Error verificar username: " + e.getMessage());
-            return false;
-        }
-    }
+  public boolean existUsername(String username) {
+    String sql = "SELECT COUNT(*) FROM users WHERE username = ?";
+    try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
+      preparedStatement.setString(1, username);
+      ResultSet rs = preparedStatement.executeQuery();
+      if (rs.next()) {
+        int count = rs.getInt(1);
+        return count > 0;
+      }
 
-  //lista de todos los usuarios
+      return false;
+    } catch (SQLException e) {
+      System.err.println("Error verificar username: " + e.getMessage());
+      return false;
+    }
+  }
+
+  // lista de todos los usuarios
   public list<User> listallUsers() {
     List<User> lista = new ArrayList<>();
-        String sql = "SELECT id, username, password, email, is_active FROM users ORDER BY id";
-        try (Statement prepStatement = ConnectionDB.getConnection().createStatement();
-             ResultSet rs = prepStatement.executeQuery(sql)) {
-            while (rs.next()) {
-                lista.add(new User(
+    String sql = "SELECT id, username, password, email, is_active FROM users ORDER BY id";
+    try (Statement prepStatement = ConnectionDB.getConnection().createStatement();
+        ResultSet rs = prepStatement.executeQuery(sql)) {
+      while (rs.next()) {
+        lista.add(new User(
+            rs.getInt("id"),
+            rs.getString("username"),
+            rs.getString("password"),
+            rs.getString("email"),
+            rs.getBoolean("is_active")));
+      }
+    } catch (SQLException e) {
+      System.err.println("Error listar usuarios: " + e.getMessage());
+    }
+    return lista;
+  }
+
+  // busqueda de usuarios por username
+  public User searchByUsername(String username) {
+    String sql = "SELECT id, username, password, email, is_active FROM users WHERE username = ?";
+    try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
+      preparedStatement.setString(1, username);
+      ResultSet rs = preparedStatement.executeQuery();
+      if (rs.next()) {
+        return new User(
+            rs.getInt("id"),
+            rs.getString("username"),
+            rs.getString("password"),
+            rs.getString("email"),
+            rs.getBoolean("is_active"));
+      }
+    } catch (SQLException e) {
+      System.err.println("Error buscar usuario: " + e.getMessage());
+    }
+    return null;
+  }
+
+  // busqueda de usuarios por id
+  public User searchById(int id) {
+        String sql = "SELECT id, username, password, email, is_active FROM users WHERE id = ?";
+        try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
+            preparedStatement.setInt(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                return new User(
                     rs.getInt("id"),
                     rs.getString("username"),
                     rs.getString("password"),
                     rs.getString("email"),
                     rs.getBoolean("is_active")
-                ));
+                );
             }
         } catch (SQLException e) {
-            System.err.println("Error listar usuarios: " + e.getMessage());
+            System.err.println("Error buscar por id: " + e.getMessage());
         }
-        return lista;
+        return null;
     }
