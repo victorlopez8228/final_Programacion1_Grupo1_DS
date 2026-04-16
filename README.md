@@ -132,11 +132,12 @@ user-management/
 ---
 
 ## 📈 Futuras mejoras
-Roles de usuario (administrador / usuario estándar)
-Registro de auditoría (log de acciones)
-Recuperación de contraseña por email
-Exportar lista de usuarios a CSV o PDF
-Soporte para múltiples bases de datos
+* Roles de usuario (administrador / usuario estándar)
+* Registro de auditoría (log de acciones)
+* Recuperación de contraseña por email
+* Exportar lista de usuarios a CSV o PDF
+* Soporte para múltiples bases de datos
+* Integración con API REST  — reemplazar las consultas JDBC directas por peticiones HTTP a una API externa, desacoplando la app de la base de datos 
 ---
 
 ### 📦 Versionado
