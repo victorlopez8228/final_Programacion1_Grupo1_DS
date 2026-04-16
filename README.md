@@ -101,14 +101,16 @@ user-management/
 ---
 
 ## 🎯 Funcionalidades
-Función	Descripción
-Login	Autenticación con validación de estado activo/inactivo
-Crear usuario	Registro con validaciones y hash SHA-256 automático
-Listar usuarios	Vista en tabla con scroll (ID, username, email, estado)
-Cambiar username	Validación de unicidad antes de actualizar
-Cambiar contraseña	Nueva contraseña hasheada antes de guardar
-Cambiar estado	 activo ↔ inactivo con confirmación
-Eliminar usuario	Doble confirmación antes de eliminar permanentemente
+
+| Función            | Descripción                                                               |
+|--------------------|---------------------------------------------------------------------------|
+| Login              | Autenticación con validación de estado activo/inactivo                    |
+| Crear usuario      | Registro con validaciones y hash SHA-256 automático                       |
+| Listar usuarios    | Vista en tabla con scroll (ID, username, email, estado)                   |
+| Cambiar username   | Validación de unicidad antes de actualizar                                |
+| Cambiar contraseña | Nueva contraseña hasheada antes de guardar                                |
+| Cambiar estado     | Toggle activo ↔ inactivo con confirmación                                 |
+| Eliminar usuario   | Doble confirmación antes de eliminar permanentemente  
 ---
 
 ## 🔐 Seguridad
@@ -120,11 +122,13 @@ Eliminar usuario	Doble confirmación antes de eliminar permanentemente
 ---
 
 ### 🔑 Usuario de prueba
-Campo	Valor
-Username	admin
-Password	admin123
-Email	admin@sistema.com
-Estado	Activo
+
+| Campo    | Valor               |
+|----------|---------------------|
+| Username | admin               |
+| Password | admin123            |
+| Email    | admin@sistema.com   |
+| Estado   | Activo              |
 ---
 
 ## 📈 Futuras mejoras
