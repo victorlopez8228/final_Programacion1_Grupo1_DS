@@ -1,35 +1,24 @@
 package Dao;
 
-import java.sql.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import db.ConexionDb;
 
+import model.User;
 
 public class UserDAO {
-    public void registerUser(String username, String password, String email) {
-         String sqlCheck = "SELECT 1 FROM users WHERE username = ?";
-         String sqlInsert = "INSERT INTO users (username, password, email, is_active) VALUES (?, ?, ?, TRUE)";
 
-         try (Connection con = ConexionDb.getConnection()) {
-
-            PreparedStatement psCheck = con.prepareStatement(sqlCheck);
-            psCheck.setString(1, username);
-            if (psCheck.executeQuery().next()) {
-                System.out.println("Error: EL nombre de usuario'" + username + "'ya existe");
-                return;
-            }
-            PreparedStatement  psInsert = con.prepareStatement(sqlInsert);
-            psInsert.setString(1, username);
-            psInsert.setString(2, password);
-            psInsert.setString(3, email);
-            psInsert.executeUpdate();
-            System.out.println("Usuario registrado exitosamente");
-            
-         }catch (SQLException e) {
-            System.out.println("Error al verificar el nombre de usuario: " + e.getMessage());
-            return;
-          }
+  public boolean insertNewUser(User user) {
+    String sql = "INSERT INTO users (username, password, email, is_active) VALUES (?, ?, ?, ?)";
+    try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
+      preparedStatement.setString(1, user.getUsername());
+      preparedStatement.setString(2, user.getPassword());
+      preparedStatement.setString(3, user.getEmail());
+      preparedStatement.setBoolean(4, user.isActive());
+      preparedStatement.executeUpdate();
+      return true;
+    } catch (SQLException e) {
+      System.err.println("Error al insertar el usuario: " + e.getMessage());
+      return false;
     }
+  }
 }
