@@ -4,13 +4,13 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-import Dao.UserDAO;
-import model.model.User;
+import dao.UserDAO;
+import model.User;
 
 public class AuthService {
 
   // Capa de Servicio
-  private final UserDAO DAO = new UserDAO();
+  private final UserDAO dao = new UserDAO();
 
   // SEGURIDAD: HASH SHA-256
   public String hashPassword(String password) {
@@ -47,7 +47,7 @@ public class AuthService {
       return null;
     }
 
-    User user = Dao.searchByUsername(username.trim());
+    User user = dao.searchByUsername(username.trim());
 
     if (user == null) {
       return null; // Usuario no existe
@@ -88,7 +88,7 @@ public class AuthService {
       return "ERROR:El email no es válido. Debe contener @ y un punto.";
     }
     // Validación de unicidad del username
-    if (Dao.existUsername(username.trim())) {
+    if (dao.existUsername(username.trim())) {
       return "ERROR:El username '" + username.trim() + "' ya está en uso.";
     }
     // Hashear contraseña antes de guardar
@@ -99,7 +99,7 @@ public class AuthService {
 
     // Crear y guardar el usuario
     User newUser = new User(username.trim(), hashedPassword, email.trim(), true);
-    boolean ok = Dao.insertNewUser(newUser);
+    boolean ok = dao.insertNewUser(newUser);
 
     return ok
         ? "OK:Usuario '" + username.trim() + "' registrado exitosamente." // Si no es null retorna este mensaje
@@ -108,27 +108,27 @@ public class AuthService {
 
   // Retorna todos los usuarios registrados en el sistema
   public List<User> listUsers() {
-    return Dao.listAllUsers();
+    return dao.listAllUsers();
   }
 
   /** Busca un usuario por username. Retorna null si no existe. */
   public User searchByUsername(String username) {
-    return Dao.searchByUsername(username);
+    return dao.searchByUsername(username);
   }
 
   /** Busca un usuario por ID. Retorna null si no existe. */
   public User searchById(int id) {
-    return Dao.searchById(id);
+    return dao.searchById(id);
   }
 
   // Cambia el username de un usuario.
   public String changeUsername(int id, String newUsername) {
     if (newUsername == null || newUsername.trim().isEmpty())
       return "ERROR:El nuevo username no puede estar vacío.";
-    if (Dao.existUsername(newUsername.trim()))
+    if (dao.existUsername(newUsername.trim()))
       return "ERROR:El username '" + newUsername.trim() + "' ya está en uso.";
 
-    boolean ok = Dao.updateUsername(id, newUsername.trim());
+    boolean ok = dao.updateUsername(id, newUsername.trim());
     return ok
         ? "OK:Username actualizado correctamente a '" + newUsername.trim() + "'."
         : "ERROR:No se pudo actualizar el username.";
@@ -145,14 +145,14 @@ public class AuthService {
     if (hash == null)
       return "ERROR:Error al encriptar la contraseña.";
 
-    boolean ok = Dao.updatePassword(id, hash);
+    boolean ok = dao.updatePassword(id, hash);
     return ok ? "OK:Contraseña actualizada correctamente." : "ERROR:No se pudo actualizar la contraseña.";
   }
 
   // Alterna el estado activo/inactivo de un usuario
   public String changeStatus(int id, boolean actualStatus) {
     boolean newStatus = !actualStatus;
-    boolean ok = Dao.changeStatus(id, newStatus);
+    boolean ok = dao.changeStatus(id, newStatus);
     String text = newStatus ? "ACTIVO" : "INACTIVO";
     return ok
         ? "OK:El usuario ahora está " + text + "."
@@ -161,7 +161,7 @@ public class AuthService {
 
   // Elimina un usuario permanentemente por su ID
   public String deleteUser(int id) {
-    boolean ok = Dao.deleteUser(id);
+    boolean ok = dao.deleteUser(id);
     return ok
         ? "OK:Usuario eliminado correctamente."
         : "ERROR:No se pudo eliminar el usuario (ID: " + id + ").";

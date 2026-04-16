@@ -1,7 +1,7 @@
-package Dao;
+package dao;
 
-import db.ConexionDb;
-import model/model.User;
+import db.ConnectionDB;
+import model.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ public class UserDAO {
   // acceso de datos para usuarios
   public boolean insertNewUser(User user) {
     String sql = "INSERT INTO users (username, password, email, is_active) VALUES (?, ?, ?, ?)";
-    try (PreparedStatement preparedStatement = ConexionDb.getConnection().prepareStatement(sql)) {
+    try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
       preparedStatement.setString(1, user.getUsername());
       preparedStatement.setString(2, user.getPassword());
       preparedStatement.setString(3, user.getEmail());
@@ -28,7 +28,7 @@ public class UserDAO {
   // verifica si ya existe un usuario con ese username en la BD.
   public boolean existUsername(String username) {
     String sql = "SELECT COUNT(*) FROM users WHERE username = ?";
-    try (PreparedStatement preparedStatement = ConexionDb.getConnection().prepareStatement(sql)) {
+    try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
       preparedStatement.setString(1, username);
       ResultSet rs = preparedStatement.executeQuery();
       if (rs.next()) {
@@ -44,10 +44,10 @@ public class UserDAO {
   }
 
   // lista de todos los usuarios
-  public List<User> listallUsers() {
+  public List<User> listAllUsers() {
     List<User> lista = new ArrayList<>();
     String sql = "SELECT id, username, password, email, is_active FROM users ORDER BY id";
-    try (Statement prepStatement = ConexionDb.getConnection().createStatement();
+    try (Statement prepStatement = ConnectionDB.getConnection().createStatement();
         ResultSet rs = prepStatement.executeQuery(sql)) {
       while (rs.next()) {
         lista.add(new User(
@@ -66,7 +66,7 @@ public class UserDAO {
   // busqueda de usuarios por username
   public User searchByUsername(String username) {
     String sql = "SELECT id, username, password, email, is_active FROM users WHERE username = ?";
-    try (PreparedStatement preparedStatement = ConexionDb.getConnection().prepareStatement(sql)) {
+    try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
       preparedStatement.setString(1, username);
       ResultSet rs = preparedStatement.executeQuery();
       if (rs.next()) {
@@ -86,7 +86,7 @@ public class UserDAO {
   // busqueda de usuarios por id
   public User searchById(int id) {
     String sql = "SELECT id, username, password, email, is_active FROM users WHERE id = ?";
-    try (PreparedStatement preparedStatement = ConexionDb.getConnection().prepareStatement(sql)) {
+    try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
       preparedStatement.setInt(1, id);
       ResultSet rs = preparedStatement.executeQuery();
       if (rs.next()) {
@@ -106,7 +106,7 @@ public class UserDAO {
   // actualizacion del campo username indicado por id
   public boolean updateUsername(int id, String nuevoUsername) {
     String sql = "UPDATE users SET username = ? WHERE id = ?";
-    try (PreparedStatement preparedStatement = ConexionDb.getConnection().prepareStatement(sql)) {
+    try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
       preparedStatement.setString(1, nuevoUsername);
       preparedStatement.setInt(2, id);
       return preparedStatement.executeUpdate() > 0;
@@ -119,7 +119,7 @@ public class UserDAO {
   // actualizacion del campo password (hash SHA-256) indicado por id
   public boolean updatePassword(int id, String nuevaPasswordHash) {
     String sql = "UPDATE users SET password = ? WHERE id = ?";
-    try (PreparedStatement preparedStatement = ConexionDb.getConnection().prepareStatement(sql)) {
+    try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
       preparedStatement.setString(1, nuevaPasswordHash);
       preparedStatement.setInt(2, id);
       return preparedStatement.executeUpdate() > 0;
@@ -132,7 +132,7 @@ public class UserDAO {
   // Activa o desactiva un usuario cambiando el campo is_active.
   public boolean changeStatus(int id, boolean nuevoEstado) {
     String sql = "UPDATE users SET is_active = ? WHERE id = ?";
-    try (PreparedStatement preparedStatement = ConexionDb.getConnection().prepareStatement(sql)) {
+    try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
       preparedStatement.setBoolean(1, nuevoEstado);
       preparedStatement.setInt(2, id);
       return preparedStatement.executeUpdate() > 0;
@@ -145,7 +145,7 @@ public class UserDAO {
   // Elimina permanentemente un usuario por su ID.
   public boolean deleteUser(int id) {
     String sql = "DELETE FROM users WHERE id = ?";
-    try (PreparedStatement preparedStatement = ConexionDb.getConnection().prepareStatement(sql)) {
+    try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
       preparedStatement.setInt(1, id);
       return preparedStatement.executeUpdate() > 0;
     } catch (SQLException e) {
