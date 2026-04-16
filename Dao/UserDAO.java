@@ -1,7 +1,7 @@
 package Dao;
 
 import db.ConexionDb;
-import model.User;
+import model/model.User;
 
 import java.sql.*;
 import java.util.ArrayList;
