@@ -144,7 +144,7 @@ Versión actual: v1.0.0
 ---
 
 ## 👨‍💻 Autor
-Desarrollado como Ramses Rodriguez, Nestor Pachay y Víctor López (Desarrolladores de Software)
+Desarrollado por Ramses Rodriguez, Nestor Pachay y Víctor López (Desarrolladores de Software)
 ---
 
 ## 📄 Licencia
