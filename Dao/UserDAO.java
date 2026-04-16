@@ -1,9 +1,13 @@
 package Dao;
 
+<<<<<<< HEAD
 impport java.sql.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+=======
+import java.sql
+>>>>>>> ebe2b760b35f0bbbb7ccc5d4f24d062de7ccae3d
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,6 +125,7 @@ public class UserDAO {
 
   // actualizacion del campo password (hash SHA-256) indicado por id
   public boolean updatePassword(int id, String nuevaPasswordHash) {
+<<<<<<< HEAD
     String sql = "UPDATE users SET password = ? WHERE id = ?";
     try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
       preparedStatement.setString(1, nuevaPasswordHash);
@@ -157,3 +162,15 @@ public class UserDAO {
     }
   }
 }
+=======
+        String sql = "UPDATE users SET password = ? WHERE id = ?";
+        try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
+            preparedStatement.setString(1, nuevaPasswordHash);
+            preparedStatement.setInt(2, id);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error actualizar password: " + e.getMessage());
+            return false;
+        }
+    }
+>>>>>>> ebe2b760b35f0bbbb7ccc5d4f24d062de7ccae3d
