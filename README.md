@@ -51,16 +51,7 @@ Ir a: https://jdbc.postgresql.org/download/
 Descargar `postgresql-42.x.x.jar`
 Colocarlo dentro de la carpeta `lib/`
 
-4. Configurar la base de datos
-```bash
-# Crear la base de datos
-psql -U postgres -c "CREATE DATABASE user_management_db;"
-
-# Ejecutar el script de tablas y datos iniciales
-psql -U postgres -d user_management_db -f setup.sql
-```
-
-4. Configurar credenciales
+3. Configurar credenciales
 Editar `src/db/ConexionDB.java`:
 ```java
 private static final String URL      = "jdbc:postgresql://localhost:5432/user_management_db";
@@ -69,7 +60,7 @@ private static final String PASSWORD = "";           // ← tu contraseña
 
 ```
 
-5. Configurar VS Code
+4. Configurar VS Code
 Instalar la extensión Extension Pack for Java (Microsoft)
 Abrir la carpeta del proyecto: `File → Open Folder`
 Presionar `Ctrl+Shift+P` → Java: Configure Classpath
