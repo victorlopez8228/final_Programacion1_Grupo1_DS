@@ -44,3 +44,24 @@ public boolean existUsername(String username) {
             return false;
         }
     }
+
+  //lista de todos los usuarios
+  public list<User> listallUsers() {
+    List<User> lista = new ArrayList<>();
+        String sql = "SELECT id, username, password, email, is_active FROM users ORDER BY id";
+        try (Statement prepStatement = ConnectionDB.getConnection().createStatement();
+             ResultSet rs = prepStatement.executeQuery(sql)) {
+            while (rs.next()) {
+                lista.add(new User(
+                    rs.getInt("id"),
+                    rs.getString("username"),
+                    rs.getString("password"),
+                    rs.getString("email"),
+                    rs.getBoolean("is_active")
+                ));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error listar usuarios: " + e.getMessage());
+        }
+        return lista;
+    }
