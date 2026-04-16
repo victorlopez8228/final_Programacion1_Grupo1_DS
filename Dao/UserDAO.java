@@ -1,9 +1,9 @@
 package Dao;
 
+impport java.sql.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +27,6 @@ public class UserDAO {
       return false;
     }
   }
-
-}
 
   // verifica si ya existe un usuario con ese username en la BD.
   public boolean existUsername(String username) {
@@ -123,13 +121,39 @@ public class UserDAO {
 
   // actualizacion del campo password (hash SHA-256) indicado por id
   public boolean updatePassword(int id, String nuevaPasswordHash) {
-        String sql = "UPDATE users SET password = ? WHERE id = ?";
-        try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
-            preparedStatement.setString(1, nuevaPasswordHash);
-            preparedStatement.setInt(2, id);
-            return preparedStatement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error actualizar password: " + e.getMessage());
-            return false;
-        }
+    String sql = "UPDATE users SET password = ? WHERE id = ?";
+    try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
+      preparedStatement.setString(1, nuevaPasswordHash);
+      preparedStatement.setInt(2, id);
+      return preparedStatement.executeUpdate() > 0;
+    } catch (SQLException e) {
+      System.err.println("Error actualizar password: " + e.getMessage());
+      return false;
     }
+  }
+
+  // activacion o desactivacion de usuario cambiondo el campo is_active
+  public boolean changeStatus(int id, boolean nuevoEstado) {
+    String sql = "UPDATE users SET is_active = ? WHERE id = ?";
+    try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
+      preparedStatement.setBoolean(1, nuevoEstado);
+      preparedStatement.setInt(2, id);
+      return preparedStatement.executeUpdate() > 0;
+    } catch (SQLException e) {
+      System.err.println("Error cambiar estado: " + e.getMessage());
+      return false;
+    }
+  }
+
+  // eliminacion de usuario permanentemente por id
+  public boolean deleteUser(int id) {
+    String sql = "DELETE FROM users WHERE id = ?";
+    try (PreparedStatement preparedStatement = ConnectionDB.getConnection().prepareStatement(sql)) {
+      preparedStatement.setInt(1, id);
+      return preparedStatement.executeUpdate() > 0;
+    } catch (SQLException e) {
+      System.err.println("Error eliminar usuario: " + e.getMessage());
+      return false;
+    }
+  }
+}
