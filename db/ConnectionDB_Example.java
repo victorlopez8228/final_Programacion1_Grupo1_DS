@@ -5,10 +5,10 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
-public class ConnectionDB {
-    private static final String URL = "jdbc:postgresql://141.148.165.152:22009/user_management_db";
-    private static final String USER = "postgres";
-    private static final String PASSWORD = "Ubntu-2209**";   
+public class ConnectionDB_Example {
+    private static final String URL = "jdbc:postgresql://123.364.237.172:1123/example_db";
+    private static final String USER = "username";
+    private static final String PASSWORD = "123pass**";   
 
 private static Connection connection = null;
 

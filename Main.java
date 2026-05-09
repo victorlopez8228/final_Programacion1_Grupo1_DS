@@ -126,20 +126,35 @@ public class Main {
     //  MENÚ 3 — CREAR USUARIO
 
     static void createUserMenu() {
+        boolean repeat = true;
         while (true) {
-            Dialogs.success("📝 Crear Nuevo Usuario\n\nPresiona OK para comenzar.\n(Cancela en cualquier campo para volver)");
 
             // Paso 1: Username
             String username = Dialogs.textRequest("👤 Nuevo username:");
-            if (username == null) return; // Canceló → volver al menú principal
+            
+            while (username == null) {
+                Dialogs.error("❌ El nombre de usuario no puede estar vacío.");
+                boolean retry = Dialogs.confirm("¿Deseas intentar ingresar el nombre de usuario nuevamente?");
+                if (!retry) {
+                    Dialogs.error("❌ Operación cancelada. No se creó ningún usuario.");
+                    return; // Canceló → volver al menú principal
+                }
+                username = Dialogs.textRequest("👤 Nuevo username:");
+            }
 
             // Paso 2: Contraseña (campo oculto)
             String password = Dialogs.passwordRequest("🔒 Contraseña (mínimo 6 caracteres):");
-            if (password == null) return;
+             while (password == null) {
+                boolean retry = Dialogs.confirm("❌ La contraseña no puede estar vacía.\n¿Deseas intentar ingresar la contraseña nuevamente?");
+                if (!retry) {
+                    Dialogs.error("❌ Operación cancelada. No se creó ningún usuario.");
+                    return; // Canceló → volver al menú principal
+                }
+                password = Dialogs.passwordRequest("🔒 Contraseña (mínimo 6 caracteres):");
+            }
 
             // Paso 3: Email
             String email = Dialogs.textRequest("📧 Email:");
-            if (email == null) return;
 
             // Registrar usuario (el servicio valida y hashea)
             String result = authService.registerUser(username, password, email);
@@ -147,12 +162,13 @@ public class Main {
             // El resultado viene con prefijo "OK:" o "ERROR:"
             if (result.startsWith("OK:")) {
                 Dialogs.success("✅ " + result.substring(3));
+                // Preguntar si desea crear otro usuario
+                repeat = Dialogs.confirm("¿Deseas crear otro usuario?");
             } else {
                 Dialogs.error("❌ " + result.substring(6));
+                // Preguntar si desea intentar de nuevo
+                repeat = Dialogs.confirm("¿Deseas intentar de nuevo?");
             }
-
-            // Preguntar si desea crear otro usuario
-            boolean repeat = Dialogs.confirm("¿Deseas crear otro usuario?");
             if (!repeat) return; // No → salir del bucle, volver al menú principal
             // Sí → el bucle while se repite automáticamente
         }
