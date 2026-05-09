@@ -1,5 +1,4 @@
 import service.AuthService;
-import db.ConnectionDB;
 import ui.Dialogs;
 import javax.swing.*;
 import java.util.List;
